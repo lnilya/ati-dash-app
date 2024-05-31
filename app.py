@@ -19,7 +19,7 @@ server.wsgi_app = WhiteNoise(server.wsgi_app, root='static/')
 def create_dash_layout(app):
 
     # Set browser tab title
-    app.title = "Your app title" 
+    app.title = "ATI predictions"
     
     # Header
     header = html.Div([html.Br(), dcc.Markdown(""" # Hi. I'm your Dash app."""), html.Br()])
