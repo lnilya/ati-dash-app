@@ -1,0 +1,103 @@
+
+$defaultPaddingL:40px;
+$defaultPaddingM:30px;
+$defaultPaddingS:20px;
+$defaultPadding:(large:$defaultPaddingL,medium:$defaultPaddingM,small:$defaultPaddingS);
+
+////Create padding classes the form pad-hor .. pad-100-ver
+$padClasses: (pad-0:($defaultPadding,0),
+		pad-25: ($defaultPadding,.25),
+		pad-33: ($defaultPadding,.33),
+		pad-50: ($defaultPadding,.5),
+		pad-75: ($defaultPadding,.75),
+		pad-100: ($defaultPadding,1),
+		pad-150: ($defaultPadding,1.5),
+		pad-200: ($defaultPadding,2),
+		pad-300: ($defaultPadding,3));
+$dir: (hor:(padding-left,padding-right),right:(padding-right),left:(padding-left),ver:(padding-top,padding-bottom),top:(padding-top),bottom:(padding-bottom), except-bottom:(padding-top,padding-right,padding-left), except-top:(padding-bottom,padding-right,padding-left),except-left:(padding-bottom,padding-right,padding-top));
+@each $bp, $val in $padClasses{
+	@each $dir, $props in $dir{
+
+		//generate pad-100-hor classes
+		.#{$bp}-#{$dir}{
+			@include resp-prop-map($props,nth($val,1),nth($val,2),0);
+		}
+
+		//Create classes like pad-100-hor-medium to have padding classes that work only for a single breakpoint
+		@each $breakpoint in (small, medium, large){
+			$bpstring: $breakpoint;
+			@if($breakpoint != large){ $bpstring: $breakpoint only; }
+			@include breakpoint($bpstring){
+				.#{$bp}-#{$dir}-#{$breakpoint}{
+					@each $propVal in $props{
+						#{$propVal}:map_get(nth($val,1),$breakpoint) * nth($val,2);
+					}
+				}
+			}
+		}
+	}
+
+	//Create classes like pad-100-medium to have padding classes that work only for a single breakpoint
+	@each $breakpoint in (small, medium, large){
+		$bpstring: $breakpoint;
+		@if($breakpoint != large){ $bpstring: $breakpoint only; }
+
+		@include breakpoint($bpstring){
+			.#{$bp}-#{$breakpoint}{
+				padding:map_get(nth($val,1),$breakpoint) * nth($val,2);
+			}
+		}
+	}
+	//generate pad-100 classes
+	.#{$bp}{
+		@include resp-prop-map('padding',nth($val,1),nth($val,2),0);
+	}
+}
+
+
+$marginClasses: (margin-0:($defaultPadding,0),
+		margin-50: ($defaultPadding,.5),
+		margin-25: ($defaultPadding,.25),
+		margin-100: ($defaultPadding,1),
+		neg-margin-100: ($defaultPadding,-1),
+		margin-150: ($defaultPadding,1.5),
+		margin-200: ($defaultPadding,2),
+		margin-300: ($defaultPadding,3));
+$dirMargin: (hor:(margin-left,margin-right),right:(margin-right),left:(margin-left),ver:(margin-top,margin-bottom),top:(margin-top),bottom:(margin-bottom), except-bottom:(margin-top,margin-right,margin-left), except-top:(margin-bottom,margin-right,margin-left));
+@each $bp, $val in $marginClasses{
+	@each $dir, $props in $dirMargin{
+		.#{$bp}-#{$dir}{
+			@include resp-prop-map($props,nth($val,1),nth($val,2),0);
+		}
+
+
+		//Create classes like pad-100-hor-medium to have padding classes that work only for a single breakpoint
+		@each $breakpoint in (small, medium, large){
+			$bpstring: $breakpoint;
+			@if($breakpoint != large){ $bpstring: $breakpoint only; }
+			@include breakpoint($bpstring){
+				.#{$bp}-#{$dir}-#{$breakpoint}{
+					@each $propVal in $props{
+						#{$propVal}:map_get(nth($val,1),$breakpoint) * nth($val,2);
+					}
+				}
+			}
+		}
+	}
+
+	//Create classes like margin-100-medium to have padding classes that work only for a single breakpoint
+	@each $breakpoint in (small, medium, large){
+		$bpstring: $breakpoint;
+		@if($breakpoint != xlarge){ $bpstring: $breakpoint only; }
+
+		@include breakpoint($bpstring){
+			.#{$bp}-#{$breakpoint}{
+				margin:map_get(nth($val,1),$breakpoint) * nth($val,2);
+			}
+		}
+	}
+
+	.#{$bp}{
+		@include resp-prop-map('margin',nth($val,1),nth($val,2),0);
+	}
+}

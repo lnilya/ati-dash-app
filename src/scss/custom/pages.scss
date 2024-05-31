@@ -1,0 +1,38 @@
+.page-try {
+	.option-bar {
+		.dash-dropdown {
+			width: 100% !important;
+		}
+
+	}
+	.small-list{
+		margin-left: 10px;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		max-height: 800px;
+		overflow-y: scroll;
+		font-size: .7em;
+		min-width: 200px;
+		background: #ddd;
+		>*{
+			display: block;
+			padding: 3px 5px;
+			&:first-child{
+				font-size: 1em;
+				font-weight: bold;
+				margin-bottom: 5px;
+				border-bottom: 1px solid #ccc;
+			}
+			&:nth-child(even){
+				background: #eee;
+			}
+		}
+	}
+
+}
+
+#page-shifts{
+	.main-col{
+		width: 66%;
+	}
+}

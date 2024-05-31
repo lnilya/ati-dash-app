@@ -1,0 +1,29 @@
+{
+  "name": "plantestimator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "font-awesome": "^4.7.0",
+    "mustard-ui": "^1.0.4",
+    "natives": "^1.1.6"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.29.1",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "node-sass": "^8.0.0"
+  },
+  "browserslist": [
+    "last 2 versions"
+  ],
+  "scripts": {
+    "start": "gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

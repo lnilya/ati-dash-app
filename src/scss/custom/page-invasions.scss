@@ -1,0 +1,18 @@
+#page-invasions{
+	#selectedSpecies{
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		flex-wrap: wrap;
+		justify-content: flex-start;
+    	align-content: baseline;
+
+		a{
+			margin: 3px 5px;
+			padding: 3px 5px;
+			background-color: #f0f0f0;
+    		border-radius: 5px;
+		}
+
+	}
+}

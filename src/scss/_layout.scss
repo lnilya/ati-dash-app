@@ -1,0 +1,103 @@
+/*Centers an element by giving it absolute positin and translating it*/
+.abs-centered{
+	position:absolute;
+	top: 50%; left:50%;
+	transform: translate(-50%, -50%);
+}
+
+
+.w-50{
+	width: 50%;
+}
+.w-33{
+	width:33.333%;
+}
+.full-w{
+	width: 100%;
+}
+
+//***************************************************************/
+//* FLEX */
+//***************************************************************/
+
+
+.fl-grow {
+	flex-grow: 1;
+}
+
+.fl-equal-size {
+	> * {
+		flex-grow: 1;
+		flex-basis: 0;
+	}
+}
+
+.fl-row {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+
+	&-start {
+		@extend .fl-row;
+		justify-content: flex-start;
+	}
+
+	&-end {
+		@extend .fl-row;
+		justify-content: flex-end;
+	}
+
+	&-between {
+		@extend .fl-row;
+		justify-content: space-between;
+	}
+
+	&-around {
+		@extend .fl-row;
+		justify-content: space-around;
+	}
+
+	&-evenly {
+		@extend .fl-row;
+		justify-content: space-evenly;
+	}
+}
+.rel{
+	position: relative;
+}
+.fl-align-stretch {
+	align-items: stretch;
+}
+.fl-align-center {
+	align-items: center;
+}
+
+.fl-align-start {
+	align-items: flex-start;
+}
+
+.fl-align-end {
+	align-items: flex-end;
+}
+.fl-wrap {
+	flex-wrap: wrap;
+}
+
+.fl-centered {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+
+.has-shadow{
+	box-shadow: 1px 1px 3px rgba(black, 0.2);
+}
+
+
+.customer-logos-container{
+	img{
+		height: 35px;
+	}
+}

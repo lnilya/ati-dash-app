@@ -1,0 +1,86 @@
+@import "../../node_modules/mustard-ui/src/scss/vars/colors";
+
+$nav-bg-color: #36373c;
+$nav-link-color: white;
+$nav-link-active-color: $color-green-400;
+
+@import "../../node_modules/mustard-ui/src/scss/mustard-ui";
+@import "mixins";
+@import "breakpoint";
+@import "padding";
+@import "forms";
+@import "layout";
+@import "elements";
+@import "overlay";
+@import "custom/pages";
+@import "custom/page-invasions";
+
+:root{
+	--sidebar-width: 400px;
+	--topbar-height: 40px;
+}
+#ClassDistributions{
+	min-height: 90vh;
+}
+nav{
+	z-index: 9999;
+	height: var(--topbar-height);
+	@include fix-to($fix-top);
+	@extend .pad-50-hor;
+	.nav-logo{
+		font-size: 20px;
+		color: white;
+		padding-left: 0;
+	}
+	.nav-container{
+		max-width: unset !important;
+		margin-left: 0;
+		padding-left: 0;
+		margin-right: 0;
+		padding-right: 0;
+	}
+}
+body{
+	background: #FEF9F2;
+	.outer{
+		margin-left: var(--sidebar-width);
+		.option-bar{
+			overflow-y:auto;
+			h1,h2,h3,h4{
+				color: white;
+			}
+
+
+			@include fix-to($fix-left);
+			top: var(--topbar-height);
+			background: #515156;
+			color: white;
+			width: var(--sidebar-width);
+		}
+		.main-content{
+			padding-top: var(--topbar-height);
+			@extend .pad-50-hor;
+		}
+	}
+}
+footer{
+	display: none !important;
+}
+
+.neg-margin{
+	margin-left: -15px !important;
+	margin-right: -15px !important;
+}
+
+.card-section{
+	margin-left: -30px !important;
+	margin-right: -30px !important;
+	padding: 10px 10px;
+	border-bottom: 1px solid #658cab44;
+}
+.neg-margin-card{
+	margin-left: -30px !important;
+	margin-right: -30px !important;
+}
+
+

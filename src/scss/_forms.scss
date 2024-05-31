@@ -1,0 +1,64 @@
+label{
+	font-weight: bold;
+	margin-bottom: 0.5em;
+}
+
+.dash-dropdown {
+	width: 100%;
+	.Select-value {
+		display: flex !important;
+	}
+	.Select-control{
+		padding: 5px;
+	}
+}
+
+.card-section, .card{
+	max-width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+	label{
+		margin-bottom: 0;
+		padding-right: 10px;
+	}
+	.Select-control{
+		min-width: 300px;
+	}
+	.range-slider{
+		padding-bottom: 0 !important;
+	}
+}
+.dash-dropdown > *{
+	color: black !important;
+}
+
+
+.radio-container{
+	input{
+		margin-right: 2px;
+	}
+	label{
+		margin-right: 20px;
+	}
+}
+
+.col-legend {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	line-height: 1;
+	.dot{
+		margin-right: 3px;
+		margin-bottom: 10px;
+	}
+	.dot-label{
+		padding-right: 20px;
+		margin-bottom: 10px;
+	}
+}
+
+button[disabled]{
+	pointer-events: none;
+}

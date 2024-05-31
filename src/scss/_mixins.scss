@@ -1,0 +1,179 @@
+//***************************************************************/
+//* MAIN FILE FOR MIXINS AND SHARED FUNCTIONS */
+//***************************************************************/
+
+
+
+
+/**
+ * Sets a given property or a list of properties to have different values at different breakpoints from a map.
+ * mult and add will only be used if the value of the property is numeric like 20px but not for things like "10px 20px" (e.g. for padding).
+ */
+
+@mixin resp-prop-map($prop, $propMap, $mult:1, $add: 0) {
+
+	$large: auto;
+	$medium: auto;
+	$small: auto;
+	@if map-has-key($propMap, 'large') { $large: map_get($propMap, 'large'); }
+	@if map-has-key($propMap, 'medium') { $medium: map_get($propMap, 'medium'); }
+	@if map-has-key($propMap, 'small') { $small: map_get($propMap, 'small'); }
+
+	@if $large != auto and type-of($large) == 'number'{ $large : $add + ($large * $mult); }
+	@if $medium != auto and type-of($medium) == 'number' { $medium : $add + ($medium * $mult); }
+	@if $small != auto and type-of($small) == 'number' {$small : $add + ($small * $mult); }
+
+	@include resp-prop($prop,$large,$medium,$small);
+}
+/**
+ * Sets a given property or a list of properties to have different values at different breakpoints.
+  */
+@mixin resp-prop($prop, $large:'auto', $medium:'auto', $small:'auto') {
+
+	@if(type-of($prop) == 'list'){ //set multiple properties with the same value
+		@if $large != 'auto' {
+			@include breakpoint(large) {
+				@each $property in $prop { #{$property}: $large; }
+			}
+		}
+		@if $medium != 'auto' {
+			@include breakpoint(medium only) {
+				@each $property in $prop { #{$property}: $medium; }
+			}
+		}
+		@if $small != 'auto' {
+			@include breakpoint(small only) {
+				@each $property in $prop { #{$property}: $small; }
+			}
+		}
+	}@else{
+		@if $large != 'auto' { @include breakpoint(large) {#{$prop}: $large;} }
+		@if $medium != 'auto' { @include breakpoint(medium only) {#{$prop}: $medium; } }
+		@if $small != 'auto'{ @include  breakpoint(small only) {#{$prop}: $small;  } }
+	}
+}
+
+//***************************************************************/
+//* STICKS AND FIXES */
+//***************************************************************/
+
+$fix-top:    (top,right,left);
+$fix-top-right:    (top,right);
+$fix-top-left:    (top,left);
+$fix-bottom-left:    (bottom,left);
+$fix-bottom-right:    (bottom,right);
+$fix-bottom: (bottom,right,left);
+$fix-left:   (top,bottom,left);
+$fix-right:  (top,bottom,right);
+$fix-all:  (top,bottom,left,right);
+/**
+* Fixes the object to a certain part of the screen by setting its position to FIXED
+* and adjusting top,right,left,bottom properties. use the variables $fix-left/right... defined above.
+*/
+@mixin fix-to($fixArray, $withOffset:0){
+	position: fixed;
+	@each $prop in $fixArray {
+		@if(type-of($withOffset) == 'map'){
+			@if(map_has_key($withOffset,$prop)){
+				#{$prop}: map_get($withOffset,$prop);
+			}@else{
+				#{$prop}: 0;
+			}
+		}@else{
+			#{$prop}: $withOffset;
+		}
+	}
+}
+/**
+* Sticks an object to a certain part of the parent by setting its position to ABSOLUTE.
+* and adjusting top,right,left,bottom properties. use the variables $fix-left/right... defined above to define where to stick to
+* $withOffset can either be a pixel value or a map (top:20px, bottom:15px) to define the sticking more precisely.
+*/
+@mixin stick-to($fixArray, $withOffset:0){
+	position: absolute;
+	@each $prop in $fixArray {
+		@if(type-of($withOffset) == 'map'){
+			@if(map_has_key($withOffset,$prop)){
+				#{$prop}: map_get($withOffset,$prop);
+			}@else{
+				#{$prop}: 0;
+			}
+		}@else{
+			#{$prop}: $withOffset;
+		}
+	}
+}
+
+/**Adds an offset to the top of component if wordpress displays an admin bar.
+The default property to do this is top, but it can also be easily changed to margin-top or padding-top for example.
+*/
+@mixin with-admin-bar($offsetProp: 'top'){
+	&.with-admin-bar{
+		@include breakpoint(small only) {
+			#{$offsetProp}: 46px;
+		}
+		#{$offsetProp}: 32px;
+	}
+}
+
+/**
+Changes the offset of a block depending on if the body has an admin bar.
+ */
+@mixin with-body-admin-bar($el, $offsetProp: 'top', $add: 0, $addMobile: 0){
+	@if $add > 0 {
+		@if $addMobile == 0{
+			$addMobile: $add;
+		}
+	}
+
+	body.admin-bar #{$el}{
+		@include breakpoint(medium down) {
+			#{$offsetProp}: 46px + $addMobile;
+		}
+		#{$offsetProp}: 32px + $add;
+	}
+}
+
+
+//***************************************************************/
+//* BG */
+//***************************************************************/
+
+@mixin addAfterImage($icon, $width, $height, $marginLeft:5px, $offY:0px,$offX:0px){
+	&:after{
+		content: ' ';
+		display: inline-block;
+		margin-left: $marginLeft;
+		background: url('../images/#{$icon}') center no-repeat;
+		background-size: 100%;
+		width: $width;
+		height: $height;
+		transform: translate($offX,$offY);
+	}
+}
+@mixin addBeforeImage($icon, $width, $height, $marginRight:5px, $offY:0px,$offX:0px){
+	&:before{
+		content: ' ';
+		display: inline-block;
+		margin-right: $marginRight;
+		background: url('../images/#{$icon}') center no-repeat;
+		background-size: 100%;
+		width: $width;
+		height: $height;
+		transform: translate($offX,$offY);
+	}
+}
+
+@mixin addArrowBG($col){
+	background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='14px' height='10px' viewBox='0 0 14 10' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Ctitle%3EPath%3C/title%3E%3Cg id='Export' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cpath d='M3.4140375,5.9999625 L1.9998375,7.4141625 L6.2931375,11.7071625 C6.6837375,12.0980625 7.3173375,12.0980625 7.7070375,11.7071625 L12.0003375,7.4141625 L10.5861375,5.9999625 L8.0001375,8.5859625 L8.0001375,-1.9998375 L6.0003375,-1.9998375 L6.0003375,8.5862625 L3.4140375,5.9999625 Z' id='Path' fill='%23FFFFFF' fill-rule='nonzero' transform='translate(7.000088, 5.000250) rotate(-90.000000) translate(-7.000088, -5.000250) '%3E%3C/path%3E%3C/g%3E%3C/svg%3E");
+}
+
+//Given a pixel value at 1600px window width, will calculate a size in vw, which will be fluid
+@function pxToFluid($sizeAt1400px){
+	@return 0.714vw * $sizeAt1400px / 10px;
+}
+
+@function btnOverCol($col){
+	@return lighten($col, 5%);
+
+}
