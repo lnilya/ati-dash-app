@@ -2,10 +2,9 @@
 
 This is the Dash App accompanieng the paper... 
 
-## Use this repository online
+## Using the interactive web interface
 
-A compiled version can be accessed here:
-[https://ati-nz-predictions-7e6f3d514735.herokuapp.com/](Click view interactive maps)
+[-> Click view interactive maps](https://ati-nz-predictions-7e6f3d514735.herokuapp.com/)
 
 (The app can be slow to react, be patient. If it is too slow, consider cloning the repository and running it locally)
 
