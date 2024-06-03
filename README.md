@@ -9,6 +9,8 @@ A compiled version can be accessed here:
 
 (The app can be slow to react, be patient. If it is too slow, consider cloning the repository and running it locally)
 
+![ATI-Screenshot.jpg](ATI-Screenshot.jpg)
+
 ## Build this repository and run locally 
 
 1. Download the repository.
