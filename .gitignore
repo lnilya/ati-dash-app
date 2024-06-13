@@ -1,2 +1,6 @@
 /node_modules
 /src/__libs/.idea
+/__pycache__
+__pycache__
+/src/pages/__pycache__
+/src/__libs/dashutil/__pycache__

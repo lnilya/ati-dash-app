@@ -75,7 +75,7 @@ class PlotInfo:
 
 
 class SpeciesInfo:
-    Full = DATAFOLDER + "1_SpeciesInfo.csv"
+    Full = DATAFOLDER + "rawdata/1_SpeciesInfo.csv"
 
 
 class Bioclim:
@@ -83,6 +83,9 @@ class Bioclim:
     AtPlotsByYearLinearAppx = DATAFOLDER + '_v3/_TrainingData/2_ClimateEstimates_HotRunzLinear.csv'  # linear approximation values from horunz
 
 
+class Maps:
+    AdultsOnly = "assets/data/maps/"
+    AdultsWithSameSplitByDBH = "assets/data/maps_dbh/"
 class Shifts:
 
     allPlotsByMethod = DATAFOLDER + f'_v3/_TrainingData/1_AllMigrations_byMethod.csv'
@@ -134,8 +137,8 @@ class VarSelection:
 
 class Results:
     stackedFeaturesFolder = DATAFOLDER + '_v3/_Analysis/StackedFeatures/'
-    similaritiesFolder = DATAFOLDER + '_v3/_Analysis/Similarities/'
-    predictionsMeanFolder = DATAFOLDER + '_v3/_Analysis/MeanPredictions/'
+    similaritiesFolder = DATAFOLDER + 'Similarities/'
+    predictionsMeanFolder = DATAFOLDER + 'MeanPredictions/'
     predictionsFolder = DATAFOLDER + '_v3/_Analysis/YearPredictions/'
     predictionImgsFolder = DATAFOLDER + '_v3/_Analysis/PredictionImgs/'
     permutationImportanceFolder = DATAFOLDER + '_v3/_Analysis/PermutationImportance/'
