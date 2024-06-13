@@ -1,8 +1,6 @@
 from typing import Dict, Optional
 
 import numpy as np
-from sklearn.model_selection import train_test_split, StratifiedKFold
-from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 from GlobalParams import GlobalParams
 from src.classes.Enums import ClassificationProblem, ClassCombinationMethod
@@ -52,32 +50,6 @@ class ClassifierDataSet(Serializable):
                 "params": self._params
                 }
 
-    def getStratifiedClassificationDataSplits(self, scale: bool = True, labelEncode: bool = True,
-                                              testFolds=GlobalParams.testFolds, randomState=None):
-        """Returns the test and training splits. Use randomState to get the same results, otherwise the results are randomized."""
-        X, y = self._X, self._y
-        scaler = None
-        encoder = None
-        if labelEncode:
-            encoder = LabelEncoder()
-            y = encoder.fit_transform(y)
-        if scale:
-            scaler = StandardScaler()
-            X = scaler.fit_transform(X)
-
-        allTrains, allTests = [], []
-
-        rkf = StratifiedKFold(n_splits=testFolds, shuffle=True, random_state=randomState)
-
-        for train_index, test_index in rkf.split(X, y):
-            X_train, X_test = X[train_index], X[test_index]
-            y_train, y_test = y[train_index], y[test_index]
-
-            allTrains.append(ClassifierDataSet(self._noiseRed,self._combinationMethod, self._classificationProblem, self._vars, X_train, y_train))
-            allTests.append(ClassifierDataSet(self._noiseRed,self._combinationMethod, self._classificationProblem, self._vars, X_test, y_test))
-
-        return allTrains, allTests, scaler, encoder
-
     def getClassificationData(self, scale: bool = True, labelEncode: bool = True):
         """Returns the data in a format that can be used by a classifier"""
         X, y = self._X, self._y
@@ -91,25 +63,6 @@ class ClassifierDataSet(Serializable):
             X = scaler.fit_transform(X)
 
         return X,y,scaler,encoder
-    def getClassificationDataSplit(self, scale: bool = True, labelEncode: bool = True,
-                                   testSetSize: float = GlobalParams.testSetSize):
-        """Returns the data in a format that can be used by a classifier"""
-        X, y = self._X, self._y
-        scaler = None
-        encoder = None
-        if labelEncode:
-            encoder = LabelEncoder()
-            y = encoder.fit_transform(y)
-        if scale:
-            scaler = StandardScaler()
-            X = scaler.fit_transform(X)
-
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=testSetSize, stratify=y)
-
-        trainData = ClassifierDataSet(self._noiseRed,self._combinationMethod,self._classificationProblem, self._vars, X_train, y_train)
-        testData = ClassifierDataSet(self._noiseRed,self._combinationMethod,self._classificationProblem, self._vars, X_test, y_test)
-
-        return trainData, testData, scaler, encoder
 
     @property
     def params(self) -> Dict:

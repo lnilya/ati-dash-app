@@ -2,7 +2,6 @@ from typing import Union, Optional, TypeVar, Callable, Type
 
 import numpy as np
 from math import ceil, sqrt
-from sklearn.preprocessing import StandardScaler
 
 from src.__libs import pyutil
 from src.classes.FileIDClasses import FileID

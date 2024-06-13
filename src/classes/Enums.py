@@ -75,8 +75,8 @@ class ClassCombinationMethod(Enum):
 
     @staticmethod
     def getDict():
-        return {ClassCombinationMethod.AdultsOnly.name:"Increase or Decrease",
-         ClassCombinationMethod.AdultsWithSameSplitByDBH.name:"Increase+Survival or Decrease"}
+        return {ClassCombinationMethod.AdultsOnly.name:"Abundance Only",
+         ClassCombinationMethod.AdultsWithSameSplitByDBH.name:"Abundance and DBH"}
 
 
 

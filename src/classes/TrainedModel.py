@@ -12,9 +12,6 @@ from src.classes.Serializable import Serializable
 import paths as PATHS
 import os
 
-from src.classes.StackedData import StackedData
-from src.classes.VariableList import VariableList
-
 
 class TrainedModel(Serializable):
 
@@ -93,33 +90,6 @@ class TrainedModel(Serializable):
             NoiseRemovalBalance[dict.get("noiseBalance", "Combined").capitalize()]
         )
 
-    def predictEnsemble(self,data:StackedData) -> np.ndarray:
-        """Returns a prediction 0-1 for the increase in abundance. 0 being decrease and 1 being increase."""
-        assert "Ensemble" in self.modelID.value, "Only ensemble models can predict using predictEnsemble"
-        if not data.hasFeatures(self.trainingData.vars.list):
-            raise ValueError("Stacked data does not contain all variables needed by this classifier")
-
-        X = data.getDataAs1DArray(self.scaler, self.trainingData.vars)
-        y = self.trainedClassifier.predict_proba(X)
-        v = self.labelEncoder.transform(["I"])
-        y = y.astype(np.float32)
-        if v[0] == 1: return y
-        else: return 1 - y
-
-    def predict(self,data:StackedData, treatEnsembleClassifiersAsProbabilistic:bool = True) -> np.ndarray:
-        """Predicts the data and returns it as True/False. with true being Increase and False being Decrease in abundance.
-        If this is an ensemble model, it will return the probability of increase in abundance. """
-
-        if "Ensemble" in self.modelID.value and treatEnsembleClassifiersAsProbabilistic:
-            return self.predictEnsemble(data)
-        if not data.hasFeatures(self.trainingData.vars.list):
-            raise ValueError("Stacked data does not contain all variables needed by this classifier")
-
-        X = data.getDataAs1DArray(self.scaler, self.trainingData.vars)
-        y = self.trainedClassifier.predict(X)
-        y = self.labelEncoder.inverse_transform(y)
-        y = y == 'I'
-        return y.astype(bool)
 
 
     def fileExists(self)->bool:

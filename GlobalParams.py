@@ -5,7 +5,7 @@ from src.classes.Enums import ModelType, PointDifficulty
 
 class GlobalParams:
     """Global parameters for the entire project. Change anything here and it might have influence at various locations"""
-    maxYear = 2020
+    maxYear = 2019
     minYear = 1969
     # minYear = 1966
     yearRange = (minYear, maxYear)
