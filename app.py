@@ -12,6 +12,7 @@ app = Dash(__name__, assets_folder='./assets', use_pages=True, pages_folder="./s
 # Reference the underlying flask app (Used by gunicorn webserver in Heroku production deployment)
 server = app.server
 
+
 # Enable Whitenoise for serving static files from Heroku (the /static folder is seen as root by Heroku)
 server.wsgi_app = WhiteNoise(server.wsgi_app, root='static/')
 

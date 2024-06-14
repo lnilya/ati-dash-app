@@ -9,21 +9,28 @@ from src.datautil import PlotProps
 import plotly.graph_objects as go
 import src.shiftpredutils as utils
 
-dash.register_page(__name__, path='/', name="Range Shifts")
+dash.register_page(__name__, path='/directions', name="Directions")
 
 
 layout = html.Div([
     html.Div(className='card margin-200-top', children=[
-        html.H3(children='Plot Analysis Whole NZ', className='card-title'),
+        html.H3(children='Individual Shift Directions', className='card-title'),
         dcc.Markdown(className="info-box margin-50-bottom ", children=[
             '''
-                **Data**: Each point is belongs to a species and two consecutive measurements of the same plot. We look at how cover/height of this species in that plot changed. Open Access RECCE data entire NZ. 
+                Plot displays the gradients of abundance change for each species. It is calculated by partitioning the entire predicted area (see the area used in [ATI Maps](/ati)) of a species into a part where abundance increases (ATI > 0.5) and a part where abundance decreases (ATI < 0.5).
+                The gradient is calculated as the difference in the average value of a variable between the two parts. As it is a difference, the value is given as ΔX. The magintude of these numbers can be interpreted as the strength of the gradient along a variable and compared across species.      
+                
+                **Important**: If, for example, ΔElevation = 300m for a species it does __not mean__ that the species shifted its range 300 m upwards. It merely means that the best conditions (to increase in abundance) are 300m above the worst conditions and that the species will experience an upwards "pull". The actual ranges will depend on many other factors, like land use, dispersal etc. and can't be inferred from these numbers. 
+            
+                **X / Y**: Select variables you want to compare.
+                
+                **Color**: Optional color coding of points by family, growth form etc. 
+                
+                **Dataset**: Defines how plots are used for model training. 
+                - **Abundance Only** (65 species) uses only plots where the number of individuals decreased or increased, discarding those where it stayed the same. It is a stronger signal of range shifts.
+                - **Abundance and DBH** (77 species), here plots with no change in abundance are included as well by comparing the total diameter at breast height (DBH). Pracitcally most plots (75%) with no abundance change end up getting an "increased" label. Gradients inferred from this datasets will point towards an increase in abundance OR survival of the species.     
 
-                **Filters**: Either a specific growth form or a specific species.
-
-                **X**: Different abiotic attributes of plots (location, elevation, slope etc)
-
-                **Y**: Either Change in Cover or Height per year (between two consecutive measurements of the same plot)
+                **Variable Set**: The set of variables used by the model. Updates what can be chosen on X and Y axis. The reliability of predictions is slightly higher for more variables, but the larger dataset has a large number of highly correlated and redundand variables. 
             '''
         ]),
 

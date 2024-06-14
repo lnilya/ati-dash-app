@@ -134,7 +134,7 @@ class PredictiveVariableSet:
     @staticmethod
     def getDict():
         return {PredictiveVariableSet.MinCorrelated.name: "Explain (14 Vars)",
-                PredictiveVariableSet.PC7.name: "Principal Components (7 Vars)",
+                # PredictiveVariableSet.PC7.name: "Principal Components (7 Vars)",
                 PredictiveVariableSet.Full.name: "All Variables (37 Vars)",
                 }
 

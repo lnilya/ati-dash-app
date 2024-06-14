@@ -22,16 +22,23 @@ dash.register_page(__name__, path='/ati', name="ATI Maps")
 
 layout = html.Div([
     html.Div(className='card margin-200-top', children=[
-        html.H3(children='Plot Analysis Whole NZ', className='card-title'),
+        html.H3(children='ATI Maps', className='card-title'),
         dcc.Markdown(className="info-box margin-50-bottom ", children=[
             '''
-                **Data**: Generates a map of Abundance Trend Indicator Predictions (ATI). Values above 0.5 indicate an increase in abundance (or abundance and survival depending on selected dataset).  
+                Shows the ATI predictions on a map. The ATI is a value between 0 and 1 that indicates where a species likely increased (>0.5 in red) or decreased (<0.5 in blue) in abundance. The data to generate these maps is an average over the years 1969-2019 and reflects past movements, not future projections. 
 
-                **Dataset**: Defines how plots are used for model training. Species automatically updates when changed. 
+                **Dataset**: Defines how plots are used for model training. Species automatically update when changed. 
                 - **Abundance Only** (65 species) uses only plots where the number of individuals decreased or increased, discarding those where it stayed the same. It is a stronger signal of range shifts.
-                - **Abundance and DBH** (77 species), here plots with no change in abundance are included as well by comparing the total diameter at breast height (DBH). Pracitcally most plots (75%) with no abundance change end up getting an "increased" label. Therefore values >0.5 in this dataset indicate an increase in abundance OR survival of the species.     
-
-                **Area**: To avoid using the models for extrapolation outside the climatic conditions of the training data we use a similarity metric to limit the area where predictions are made. It compares conditions in each pixel with the conditions of the training data using a nearest neighbour average (see paper for details).
+                - **Abundance and DBH** (77 species): Here, plots with no change in abundance are included as well by comparing the total diameter at breast height (DBH). Practically, most plots (75%) with no abundance change end up getting an “increased” label. Therefore, values >0.5 in this dataset indicate an increase in abundance OR the survival of the species.     
+                
+                **Species**: Updates with choice of dataset.  
+                
+                **Area**: To avoid using the models for extrapolation outside the climatic conditions of the training data, we use a similarity metric to limit the area where predictions are made. 
+                It compares conditions in each pixel with the conditions of the training data using the nearest neighbour average (see paper for details). 
+                - **95% Occurrence Area (S') **: The range of a species is defined as an area containing 95% of occurrences (S' in paper). It is the most conservative estimate of the area in the model and is trusted to make reliable predictions. 
+                - **Default (S) **: Predictions right outside the bounds are valuable and necessary to see where the species will expand to, so the default setting is an area slightly larger than the 95% occurrence interval and is called S in the paper.
+                - **No Limit **: Predictions are made without any restriction. This is useful to see how the predictions diverge from the training data. However, these predictions should not be trusted. This setting is for visualisation purposes only. 
+                 
             '''
         ]),
 

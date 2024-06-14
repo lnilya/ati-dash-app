@@ -147,8 +147,12 @@ class Results:
 
 
     @staticmethod
-    def eftiCorrAnalysis(comb:ClassCombinationMethod):
-        s = DATAFOLDER + '_v3/_Analysis/EFTICorrelationAnalysis_%s.csv'
+    def correlation(comb:ClassCombinationMethod):
+        s = DATAFOLDER + 'drivers/Correlation_%s.csv'
+        return s%comb.value
+    @staticmethod
+    def fi(comb:ClassCombinationMethod):
+        s = DATAFOLDER + 'drivers/FI_%s.csv'
         return s%comb.value
 
 
