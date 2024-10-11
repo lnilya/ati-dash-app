@@ -13,8 +13,6 @@ import plotly.express as px
 
 dash.register_page(__name__, path='/drivers-summary', name="Driver Summary")
 
-_allFamilies = list(pd.read_csv(PATHS.SpeciesInfo.Full,usecols=["Family"]).Family.unique())
-
 layout = html.Div([
     html.Div(className='card margin-200-top', children=[
         html.H3(children='Drivers of Range Shifts', className='card-title'),
@@ -57,7 +55,10 @@ layout = html.Div([
             ]),
             html.Div(className="col w-33", children=[
                 dashutil.addDropDown("drvs_familyfilter", 'Filter by Family:',
-                                     _allFamilies, persistence=False,
+                                     [], persistence=False,
+                                     multi=True, optionHeight=50, searchable=True),
+                dashutil.addDropDown("drvs_gffilter", 'Filter by Growth Form:',
+                                     [], persistence=False,
                                      multi=True, optionHeight=50, searchable=True),
                 dashutil.addDropDown("drvs_exvar", 'Exclude Variables:',
                                      dict(zip(PredictiveVariableSet.MinCorrelated.list,PlotProps.renameBioClimToClearTextList(PredictiveVariableSet.MinCorrelated.list.copy()))),
@@ -74,6 +75,7 @@ layout = html.Div([
                                      dict(zip(PredictiveVariableSet.MinCorrelated.list,PlotProps.renameBioClimToClearTextList(PredictiveVariableSet.MinCorrelated.list.copy()))),
                                      persistence=True, initial="alpha",
                                      multi=False, optionHeight=50, searchable=False),
+                html.Div(children="Alternatively: Click on a bar in the plot to sort by that variable", className="explanation"),
             ]),
         ]),
         html.Div(className='fl-row neg-margin-card card-section', children=[
@@ -85,6 +87,7 @@ layout = html.Div([
 
 @callback(
     Output("drvs_familyfilter", "options"),
+    Output("drvs_gffilter", "options"),
     Input("drvs_comb", "value"),
 )
 def setVars(comb):
@@ -94,22 +97,58 @@ def setVars(comb):
     df = pd.read_csv(PATHS.Results.fi(ClassCombinationMethod[comb]))
 
     # load species info and merge
-    df, species = getSpeciesInfo(df, useCols=["Family"])
+    df, species = getSpeciesInfo(df, useCols=["Family","GrowthForm"])
 
-    sp = list(set(df.Family))
-    sp.sort()
-    return sp
+    #get all families and their counts. Create a dict {family:family + "count"}
+    familyCount = df.groupby("Family").size().reset_index(name="Count")
+    familyCount["Label"] = familyCount["Family"] + " (" + familyCount["Count"].astype(str) + ")"
+    fd = familyCount.set_index("Family").to_dict()["Label"]
 
+
+    #Grwothform dict with counts
+    gf = df.groupby("GrowthForm").size().reset_index(name="Count")
+    gf["Label"] = gf["GrowthForm"] + " (" + gf["Count"].astype(str) + ")"
+    gf = gf.set_index("GrowthForm").to_dict()["Label"]
+
+    #sort both dicts alphabeticly by key
+    fd = {k: fd[k] for k in sorted(fd)}
+    gf = {k: gf[k] for k in sorted(gf)}
+
+
+    return fd,gf
+
+def _getVariableOrder(sortVar:str, renameBioClim:bool = True):
+    # define a color for each variable
+    varToCat = {varname: catlist[1] for varname, catlist in PlotProps.colors.items()}
+    varToCol = {varname: catlist[0] for varname, catlist in PlotProps.colors.items()}
+    varToLongName = {varname: lst[2] if len(lst) > 2 else varname for varname, lst in PlotProps.colors.items()}
+    catOrder = ['Temperature', 'Geographic', 'Precipitation', 'Hydrology', 'Topography and Aspect', 'Soil', 'Wildlife',
+                'Climate']
+
+    # sort the variables by category
+    def sort_variables(variables):
+        return sorted(variables, key=lambda var: catOrder.index(varToCat[var]))
+
+    varOrder = sort_variables(PredictiveVariableSet.MinCorrelated.list.copy())
+    colorDict = {varToLongName[var]: varToCol[var] for var in varOrder}
+
+    if sortVar is not None:
+        varOrder = [v for v in varOrder if v != sortVar] + [sortVar]
+
+    if renameBioClim:
+        varOrder = PlotProps.renameBioClimToClearTextList(varOrder)
+    return varOrder, colorDict
 @callback(
     Output("drvs_mainplot", "figure"),
     Input("drvs_familyfilter", "value"),
+    Input("drvs_gffilter", "value"),
     Input("drvs_group", "value"),
     Input("drvs_comb", "value"),
     Input("drvs_display", "value"),
     Input("drvs_sort", "value"),
     Input("drvs_exvar", "value"),
 )
-def drawPlot(filterFamily,group, comb, disp, sort, exvar):
+def drawPlot(filterFamily, filterGF, group, comb, disp, sort, exvar):
     if comb is None or disp is None:
         return go.Figure()
 
@@ -123,6 +162,8 @@ def drawPlot(filterFamily,group, comb, disp, sort, exvar):
 
     if filterFamily is not None and len(filterFamily) > 0:
         df = df[df.Family.isin(filterFamily)]
+    if filterGF is not None and len(filterGF) > 0:
+        df = df[df.GrowthForm.isin(filterGF)]
 
     #merge with df
     if group is not None:
@@ -162,21 +203,19 @@ def drawPlot(filterFamily,group, comb, disp, sort, exvar):
     #norm all to 1 to make stacked plot
     df["Value"] = df.groupby("Species")["Value"].transform(lambda x: x / x.sum())
 
+    #define coloring and order of variable stacking
+
+    varOrder, colorDict = _getVariableOrder(sort)
+
     speciesOrder = list(df.Species.unique())
-    varOrder = PredictiveVariableSet.MinCorrelated.list.copy()
     if sort is not None:
         speciesOrder = df[df.Variable == sort].sort_values("Value",ascending=False)["Species"]
-        #make the order of variables same as in PredictedVariableSet.MinCorrelated but put the sorted variable last
-        varOrder = [v for v in varOrder if v != sort] + [sort]
-        varOrder = PlotProps.renameBioClimToClearTextList(varOrder)
     else:
         #sort species by alphabet
         speciesOrder.sort()
 
     df = PlotProps.renameBioClimToClearText(df,"Variable")
-    f = px.bar(df, x="Species", y="Value", color="Variable", barmode="stack", category_orders={"Species":speciesOrder,
-                                                                                               "Variable":varOrder})
-
+    f = px.bar(df, x="Species", y="Value",barmode="stack", category_orders={"Species":speciesOrder, "Variable":varOrder}, color="Variable",color_discrete_map=colorDict)
 
     #set Y label
     f.update_yaxes(title_text=disp + " (Sum normed to 1)")
@@ -188,3 +227,23 @@ def drawPlot(filterFamily,group, comb, disp, sort, exvar):
     f.update_layout(legend=dict(orientation="h",yanchor="bottom",y=1.02,xanchor="left",x=0),margin=dict(l=0,r=0,t=0,b=0))
 
     return f
+
+#add a click handler for the main graph
+@callback(
+    Output("drvs_sort", "value"),
+    Input("drvs_mainplot", "clickData"),
+    State("drvs_mainplot", "figure"),
+    State("drvs_sort", "value"),
+    State("drvs_exvar", "value"),
+)
+def clickHandler(clickData, figure, sort, exVar):
+    if clickData is None:
+        return sort
+
+    clickedVar = clickData["points"][0]["curveNumber"]
+    vars, _ = _getVariableOrder(sort,False)
+    #remove the exVar
+    if exVar is not None:
+        vars = [v for v in vars if v not in exVar]
+
+    return vars[clickedVar]

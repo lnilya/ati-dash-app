@@ -2,7 +2,7 @@ import enum
 from typing import List, Dict, Union
 import re
 import pandas as pd
-
+import plotly.express as px
 class PlotProps:
     DistanceToTheCoast = "DistanceToTheCoast"
     Latitude = "Latitude"
@@ -144,7 +144,7 @@ class PlotProps:
         MediumSalinity:"Soil",
         MediumSoilCarbon:"Soil",
         Northing: "Location",
-        Easting: "Location"
+        Easting: "Location",
     }
 
     CategoryColors = {
@@ -160,6 +160,28 @@ class PlotProps:
         'Fluctuation': "gray",
         'Solar Radiation': "magenta",
         'Other': "#90ee90"
+    }
+    colors = {
+        'BIOEnd1':[ '#FF0000',  'Temperature',"Annual Mean Temperature"  ],# Bright Red
+        'BIOEnd3':[ '#FF6666',  'Temperature',"Isothermality"], #Light Red
+        'BIOEnd7':[ '#CC0000',  'Temperature',"Temperature Annual Range"], #Dark Red
+        'BIOEnd12':[ '#215A92',  'Precipitation',"Annual Precipitation"], #Dodger Blue
+        'BIOEnd15':[ '#1E90FF','Precipitation',"Precipitation Seasonality" ],  #Light Blue
+
+        'DistanceToNearestRiver': ['#40E0D0','Hydrology'],  # Turquoise
+
+        'Aspect Eastness':[ '#CD853F','Topography and Aspect'],  # Peru
+        'Aspect Northness': ['#BC8F8F','Topography and Aspect' ], #Rosy Brown
+        'Elevation': ['#8B4513','Topography and Aspect'],  # SaddleBrown
+        'Slope':[ '#A0522D','Topography and Aspect'],  # Sienna
+
+        'Latitude':[ '#808080','Geographic'],  # Gray
+
+        'pH': ['#228B22',  'Soil'],# Forest Green
+
+        'WindExposition':[ '#FFD700','Climate'],  # Gold
+
+        'RedDeer':[ '#800080','Wildlife'],  # Purple
     }
 
 
